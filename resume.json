@@ -1,0 +1,66 @@
+{
+    "basics": {
+        "name": "Jane Doe",
+        "label": "Senior Software Engineer",
+        "image": "",
+        "email": "jane.doe@example.com",
+        "phone": "(555) 123-4567",
+        "url": "https://janedoe.dev",
+        "summary": "Experienced software engineer with a focus on web technologies.",
+        "location": {
+            "address": "123 Tech Lane",
+            "postalCode": "94105",
+            "city": "San Francisco",
+            "countryCode": "US",
+            "region": "California"
+        },
+        "profiles": [
+            {
+                "network": "LinkedIn",
+                "username": "janedoe",
+                "url": "https://linkedin.com/in/janedoe"
+            },
+            {
+                "network": "GitHub",
+                "username": "janedoe",
+                "url": "https://github.com/janedoe"
+            }
+        ]
+    },
+    "work": [
+        {
+            "name": "Tech Corp",
+            "position": "Senior Developer",
+            "url": "https://techcorp.com",
+            "startDate": "2020-01-01",
+            "endDate": "Present",
+            "summary": "Leading frontend development teams.",
+            "highlights": [
+                " improved performance by 50%",
+                "Mentored junior devs"
+            ]
+        }
+    ],
+    "education": [
+        {
+            "institution": "State University",
+            "url": "https://state.edu",
+            "area": "Computer Science",
+            "studyType": "Bachelor",
+            "startDate": "2015-09-01",
+            "endDate": "2019-06-01",
+            "score": "3.8"
+        }
+    ],
+    "skills": [
+        {
+            "name": "Frontend",
+            "level": "Expert",
+            "keywords": [
+                "React",
+                "TypeScript",
+                "CSS"
+            ]
+        }
+    ]
+}
