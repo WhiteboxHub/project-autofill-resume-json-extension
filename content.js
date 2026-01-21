@@ -14,7 +14,8 @@ const FIELD_MAPPING = {
     "location.countryCode": ["country"],
     "profiles.linkedin": ["linkedin"],
     "profiles.github": ["github"],
-    "summary": ["summary", "about", "bio", "description"]
+    "summary": ["summary", "about", "bio", "description"],
+    "label": ["title", "position", "role", "job_title", "current_title"]
 };
 
 // Listen for messages from popup
@@ -27,7 +28,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
-function fillForm(resume) {
+function fillForm(resume, aiEnabled) {
     const inputs = document.querySelectorAll('input, textarea, select');
 
     inputs.forEach(input => {
@@ -39,10 +40,18 @@ function fillForm(resume) {
 
         if (matchedValue) {
             setInputValue(input, matchedValue);
+        } else if (aiEnabled) {
+            console.log("AI Enabled: Would attempt to fill unmatched field", input.name || input.id);
+            // Future LLM hook:
+            // if (isComplexField(input)) { callLLM(input, resume); }
         }
     });
 
-    alert('AutoFill complete! Please review the form before submitting.');
+    if (aiEnabled) {
+        alert('AutoFill complete (AI Enhanced)! Please review the form.');
+    } else {
+        alert('AutoFill complete! Please review the form before submitting.');
+    }
 }
 
 function findValueForInput(input, resume) {
@@ -79,6 +88,7 @@ function findValueForInput(input, resume) {
             if (key === 'phone') return basics.phone;
             if (key === 'url') return basics.url;
             if (key === 'summary') return basics.summary;
+            if (key === 'label') return basics.label;
 
             if (key === 'location.address') return location.address;
             if (key === 'location.city') return location.city;
