@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AutoFill Extension Test Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 700px;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 6px;
+      margin-top: 4px;
+    }
+    hr {
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Personal Information</h2>
+
+<label>First Name</label>
+<input type="text" name="firstName" placeholder="First Name">
+
+<label>Last Name</label>
+<input type="text" name="lastName" placeholder="Last Name">
+
+<label>Email</label>
+<input type="email" name="email" placeholder="Email">
+
+<label>Country Code</label>
+<input type="text" name="countryCode" placeholder="+1">
+
+<label>Phone Number</label>
+<input type="tel" name="phone" placeholder="Phone Number">
+
+<hr>
+
+<h2>Address</h2>
+
+<label>Street Address</label>
+<input type="text" name="address1" placeholder="Street Address">
+
+<label>Address Line 2</label>
+<input type="text" name="address2" placeholder="Apt / Suite">
+
+<label>City</label>
+<input type="text" name="city" placeholder="City">
+
+<label>State / Region</label>
+<input type="text" name="state" placeholder="State">
+
+<label>Postal Code</label>
+<input type="text" name="zip" placeholder="Zip">
+
+<label>Country</label>
+<input type="text" name="country" placeholder="Country">
+
+<hr>
+
+<h2>Work Information</h2>
+
+<label>Current Company</label>
+<input type="text" name="currentCompany" placeholder="Company">
+
+<label>Current Job Title</label>
+<input type="text" name="jobTitle" placeholder="Job Title">
+
+<label>Years of Experience</label>
+<select name="experience">
+  <option value="">Select</option>
+  <option>1</option>
+  <option>2</option>
+  <option>3</option>
+  <option>4</option>
+  <option>5</option>
+  <option>6</option>
+  <option>7</option>
+  <option>8</option>
+  <option>9</option>
+  <option>10</option>
+</select>
+
+<label>
+  <input type="checkbox" name="currentJob">
+  Currently working here
+</label>
+
+<hr>
+
+<h2>Professional</h2>
+
+<label>Skills</label>
+<textarea name="skills" placeholder="Skills"></textarea>
+
+<label>Professional Summary</label>
+<textarea name="summary" placeholder="Summary"></textarea>
+
+<hr>
+
+<h2>Profiles</h2>
+
+<label>LinkedIn Profile</label>
+<input type="url" name="linkedin" placeholder="LinkedIn URL">
+
+<label>GitHub Profile</label>
+<input type="url" name="github" placeholder="GitHub URL">
+
+<label>Portfolio Website</label>
+<input type="url" name="portfolio" placeholder="Portfolio URL">
+
+<hr>
+
+<h2>AI Answer Fields (Should NOT autofill)</h2>
+
+<label>Why do you want to work here?</label>
+<textarea placeholder="Why do you want to work here?"></textarea>
+
+<label>Why should we hire you?</label>
+<textarea placeholder="Why should we hire you?"></textarea>
+
+<label>Describe a challenging project</label>
+<textarea placeholder="Describe a challenging project"></textarea>
+
+<label>Cover Letter</label>
+<textarea placeholder="Cover Letter"></textarea>
+
+<hr>
+
+<button>Submit</button>
+
+</body>
+</html>
