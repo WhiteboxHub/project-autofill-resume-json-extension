@@ -130,37 +130,35 @@ function findValueForInput(input, resume) {
 
     const identifiers = normalize(rawIdentifiers.join(" "));
     const tokens = new Set(identifiers.split(" ").filter(Boolean));
-    // 🔒 UNIVERSAL DIRECT MATCHING (strongest signal)
+
     const fieldText = (input.name + " " + input.id + " " + input.placeholder + " " + getLabelText(input)).toLowerCase();
 
-    // FIRST NAME — force match
-    if (
-        /first.*name|given.*name|fname/.test(fieldText) &&
-        !/last.*name|surname/.test(fieldText)
-    ) {
+    // FIRST NAME
+    if (/first.*name|given.*name|fname/.test(fieldText) && !/last/.test(fieldText)) {
         return resume.basics?.name?.split(" ")[0] || null;
     }
 
-    // LAST NAME — force match
-    if (
-        /last.*name|surname|lname|family.*name/.test(fieldText)
-    ) {
+    // LAST NAME
+    if (/last.*name|surname|lname|family.*name/.test(fieldText)) {
         return resume.basics?.name?.split(" ").slice(1).join(" ") || null;
     }
 
-    // FULL NAME — force match
-    if (
-        /full.*name|your.*name|applicant.*name/.test(fieldText) &&
-        !/first|last/.test(fieldText)
-    ) {
+    // FULL NAME
+    if (/full.*name|your.*name|applicant.*name/.test(fieldText) && !/first|last/.test(fieldText)) {
         return resume.basics?.name || null;
     }
 
-    // EMAIL — force match
+    // EMAIL
     if (/email/.test(fieldText)) return resume.basics?.email || null;
 
-    // PHONE — force match
+    // PHONE
     if (/phone|mobile|tel|contact/.test(fieldText)) return resume.basics?.phone || null;
+
+    // COUNTRY CODE (FIXED)
+    if (/country\s*code|dial\s*code|phone\s*code/.test(fieldText)) {
+        if (resume.basics?.location?.countryCode === "US") return "+1";
+        return resume.basics?.location?.countryCode || null;
+    }
 
     // CITY
     if (/city|town/.test(fieldText)) return resume.basics?.location?.city || null;
@@ -172,20 +170,22 @@ function findValueForInput(input, resume) {
     if (/zip|postal/.test(fieldText)) return resume.basics?.location?.postalCode || null;
 
     // COUNTRY
-    if (/country/.test(fieldText)) return resume.basics?.location?.countryCode || null;
+    if (/country/.test(fieldText) && !/code/.test(fieldText)) return resume.basics?.location?.countryCode || null;
 
-    // LINKEDIN
+    // LINKEDIN (FIXED)
     if (/linkedin/.test(fieldText)) {
         return resume.basics?.profiles?.find(p => p.network.toLowerCase() === "linkedin")?.url || null;
     }
 
-    // GITHUB
+    // GITHUB (FIXED)
     if (/github/.test(fieldText)) {
         return resume.basics?.profiles?.find(p => p.network.toLowerCase() === "github")?.url || null;
     }
 
-    // PORTFOLIO / WEBSITE
-    if (/portfolio|website/.test(fieldText)) return resume.basics?.url || null;
+    // WEBSITE / PORTFOLIO (FIXED)
+    if (/portfolio|website/.test(fieldText) && !/linkedin|github/.test(fieldText)) {
+        return resume.basics?.url || null;
+    }
 
     // COMPANY
     if (/current.*company|employer|organization/.test(fieldText)) {
@@ -197,20 +197,15 @@ function findValueForInput(input, resume) {
         return resume.work?.[0]?.position || null;
     }
 
-    // SKILLS
+    // SKILLS (FIXED)
     if (/skills|technical.*skills/.test(fieldText)) {
         return resume.skills?.flatMap(s => s.keywords).join(", ") || null;
     }
 
-
-    // 🔒 HARD FIELD LOCKS (added)
-    if (tokens.has("city")) return resume.basics?.location?.city || null;
-    if (tokens.has("state") || tokens.has("region")) return resume.basics?.location?.region || null;
-    if (tokens.has("postal") || tokens.has("zip")) return resume.basics?.location?.postalCode || null;
-    if (tokens.has("skills")) return resume.skills?.flatMap(s => s.keywords).join(", ") || null;
-    if (tokens.has("linkedin")) return resume.basics?.profiles?.find(p => p.network.toLowerCase() === "linkedin")?.url || null;
-    if (tokens.has("github")) return resume.basics?.profiles?.find(p => p.network.toLowerCase() === "github")?.url || null;
-    if (tokens.has("portfolio") || tokens.has("website")) return resume.basics?.url || null;
+    // PROFESSIONAL SUMMARY (RESTORED)
+    if (/summary|about|bio|description/.test(fieldText)) {
+        return resume.basics?.summary || null;
+    }
 
     if (
         input.tagName === "TEXTAREA" &&
@@ -253,26 +248,17 @@ function findValueForInput(input, resume) {
         if (key === 'name') return basics.name;
         if (key === 'email') return basics.email;
         if (key === 'phone') return basics.phone;
-
-        if (tokens.has("country") && tokens.has("code")) {
-            if (location.countryCode === "US") return "+1";
-            return location.countryCode;
-        }
-
         if (key === 'url') return basics.url;
         if (key === 'summary') return basics.summary;
         if (key === 'label') return basics.label;
-
         if (key === 'location.address') return location.address;
         if (key === 'location.address2') return location.address2 || null;
         if (key === 'location.city') return location.city;
         if (key === 'location.postalCode') return (location.postalCode || "").replace(/[^\d]/g, "");
         if (key === 'location.region') return location.region;
         if (key === 'location.countryCode') return location.countryCode;
-
         if (key === 'profiles.linkedin') return getProfileUrl('linkedin');
         if (key === 'profiles.github') return getProfileUrl('github');
-
         if (key === "work.company") return latestWork?.name;
         if (key === "work.position") return latestWork?.position;
 
@@ -286,7 +272,6 @@ function findValueForInput(input, resume) {
         if (key === "education.degree") return latestEducation?.studyType;
         if (key === "education.institution") return latestEducation?.institution;
         if (key === "education.graduationYear") return latestEducation?.endDate?.slice(0, 4);
-
         if (key === "skills.list") return resume.skills?.flatMap(s => s.keywords).join(", ");
 
         return null;
@@ -307,7 +292,6 @@ function findValueForInput(input, resume) {
     }
 
     if (bestKey && bestScore >= 50) return getValueForKey(bestKey);
-
     return null;
 }
 
