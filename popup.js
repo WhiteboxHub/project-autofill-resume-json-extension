@@ -45,6 +45,38 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Handle Resume File Upload (PDF/DOCX)
+    const resumeFileInput = document.getElementById('resumeFileInput');
+    const resumeFileName = document.getElementById('resumeFileName');
+
+    // Load existing resume file name
+    chrome.storage.local.get(['resumeFile'], (result) => {
+        if (result.resumeFile) {
+            resumeFileName.textContent = `📎 ${result.resumeFile.name}`;
+        }
+    });
+
+    resumeFileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const resumeFileData = {
+                    data: e.target.result, // base64 data
+                    name: file.name,
+                    type: file.type,
+                    size: file.size
+                };
+
+                chrome.storage.local.set({ resumeFile: resumeFileData }, () => {
+                    showStatus('Resume file uploaded!', 'success');
+                    resumeFileName.textContent = `📎 ${file.name}`;
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
     // Handle Fill Form
     fillFormBtn.addEventListener('click', () => {
         chrome.storage.local.get(['resumeData'], (result) => {
